@@ -302,7 +302,13 @@ function showToast(msg){let t=document.getElementById('toast');if(!t){t=document
 async function loadStoreData(){
 try{
 const res=await fetch('https://nziqmfqcrrndzbasyeps.supabase.co/rest/v1/store_products?select=id,name,price,type,images,active,sort_order&active=eq.true&order=sort_order.asc,id.asc',{headers:{apikey:'sb_publishable_b8rha1xsGORUgPQ-USJqtA_7F6rgJUG',Authorization:'Bearer sb_publishable_b8rha1xsGORUgPQ-USJqtA_7F6rgJUG'}});
-if(res.ok) products=await res.json();
+if(res.ok) {
+  const data=await res.json();
+  products=data.map(p=>({
+    ...p,
+    imgs:Array.isArray(p.images)?p.images:[]
+  }));
+}
 }catch(e){console.warn(e)}
 initTicker();render();
 }
